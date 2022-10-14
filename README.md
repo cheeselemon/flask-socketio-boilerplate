@@ -2,7 +2,47 @@
 A boilerplate for Flask with Flask-SocketIO
 
 
-### How to run
+## Environment
+
+pip 22.2.2
+
+python 3.9.7
+
+### Setup Environment 
+
+This document assumes pyenv is installed. 
+To setup pyenv, look [here](https://github.com/pyenv/pyenv#installation)
+
+1. Install python version 3.9.7 
+
+```
+pyenv install 3.9.7
+
+```
+
+2. Setup virtualenv 
+
+```
+# Setup virtualenv 
+pyenv virtualenv 3.9.7 flask-socketio-boilerplate
+
+# Activate created virtualenv 
+pyenv activate flask-socketio-boilerplate
+
+# To remove virtualenv use the following commands:
+pyenv uninstall flask-socketio-boilerplate
+pyenv virtualenv-delete 3.9.7/envs/flask-socketio-boilerplate
+
+```
+
+## Dependencies
+
+[eventlet](http://eventlet.net/) is used as asynchronous service support.
+
+Flask-SocketIO automatically selects eventlet when it is installed. Otherwise it will use Werkzeug. Look [here](https://flask-socketio.readthedocs.io/en/latest/intro.html) for more details.
+
+## How to run
+
 
 1. Install requirements first.
 
@@ -10,7 +50,7 @@ A boilerplate for Flask with Flask-SocketIO
 pip install -r requirements.txt
 ```
 
-2. Run with python command.
+2. Run with python command. (Don't run with flask.)
 
 ```
 python main.py
