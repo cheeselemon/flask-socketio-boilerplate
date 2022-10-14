@@ -15,14 +15,14 @@ To setup pyenv, look [here](https://github.com/pyenv/pyenv#installation)
 
 1. Install python version 3.9.7 
 
-```
+```shell
 pyenv install 3.9.7
 
 ```
 
 2. Setup virtualenv 
 
-```
+```shell
 # Setup virtualenv 
 pyenv virtualenv 3.9.7 flask-socketio-boilerplate
 
@@ -46,19 +46,20 @@ Flask-SocketIO automatically selects eventlet when it is installed. Otherwise it
 
 1. Install requirements first.
 
-```
+```shell
 pip install -r requirements.txt
 ```
 
 2. Run with python command. (Don't run with flask.)
 
-```
+```shell
 python main.py
 ```
 
 3. See results 
 
 ```
+$ python main.py
 2022-10-14 12:08:59,391 [INFO] initializing socketio
 2022-10-14 12:08:59,391 [INFO]  * Restarting with stat
 2022-10-14 12:08:59,526 [INFO] initializing socketio
