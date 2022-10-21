@@ -1,46 +1,47 @@
-from flask import Flask
-from flask_socketio import SocketIO, emit
-
+# sys imports 
+import os
+import re
 import sys
 import logging
 
-# configure basic logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler("debug.log"),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
+
+# dependency imports 
+from flask import Flask
+from flask_socketio import SocketIO
+# import eventlet; eventlet.monkey_patch(socket=False)
+import eventlet; eventlet.monkey_patch()
+
+# app level imports 
+from config.config import Config
+from doctor.doctor_admin import DoctorAdmin
+from pharmacy.pharmacy_admin import PharmacyAdmin
+
+
+config = Config()
+
 
 # Initialize App 
 app = Flask(__name__)
-app.debug = True
-app.config['SECRET_KEY'] = 'secret!'
+app.debug = config.debug
+app.config['SECRET_KEY'] = config.socket_secret_key
 
 # Create socketio 
-socketio = SocketIO(app)
+# socketio = SocketIO(app, message_queue='redis://')
+socketio = SocketIO(app, message_queue=config.redis_endpoint(), async_mode='eventlet', cors_allowed_origins='*', path='sio')
 
-# Handle messages 
-@socketio.on('message')
-def handle_message(data):
-    logging.info('received message: ' + data)
-    emit("default", "default response")
-    emit('default', {'data': 'namespace'}, namespace='/test')
+# Initialize socketio namespace handlers 
+doctor_admin = DoctorAdmin(socketio, namespace='/doctor')
+pharmacy_admin = PharmacyAdmin(socketio, namespace='/pharmacy')
 
-# Handle on connect
-@socketio.on('connect')
-def test_connect(auth):
-    logging.info('Client connected')
-    emit('default', {'data': 'Connected'})
+# Define REST Input 
+app.add_url_rule("/doctor/<int:doctor_id>/request", view_func=doctor_admin.doctor_request)  
 
-# handle disconnect 
-@socketio.on('disconnect')
-def test_disconnect():
-    logging.info('Client disconnected')
+@app.route('/trigger')
+def trigger():
+    socketio.emit('my response', {'data': 'triggered!'})
+    return 'triggered!'
 
 if __name__ == '__main__':
     # Run socketio
-    logging.info('initializing socketio')
-    socketio.run(app, debug=True)
+    logging.info('[Init] socketio up and running')
+    socketio.run(app, port=8000, debug=config.debug)
