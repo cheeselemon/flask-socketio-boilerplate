@@ -1,5 +1,8 @@
 # flask-socketio-boilerplate
+
 A boilerplate for Flask with Flask-SocketIO
+
+disclaimer : please use node.js when using socket.io
 
 
 ## Environment
